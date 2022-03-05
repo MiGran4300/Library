@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Library.Areas.Identity.Data
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<LibraryUser> signInManager;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -34,6 +37,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Rents" asp-action="Index">Rent a book</a>
                         </li>
+                        
+                       
+
+    <li class="nav-item dropdown">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+            Manage
+            </button>
+        
+        <ul class="dropdown-menu" >
+           <li> <a class="dropdown-item" asp-controller="Administration"
+               asp-action="ListUsers">Users</a></li>
+             <li> <a class="dropdown-item" asp-controller="Administration"
+               asp-action="ListRoles">Roles</a></li>
+        
+        </ul>
+    </li>
+
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

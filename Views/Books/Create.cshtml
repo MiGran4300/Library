@@ -1,4 +1,4 @@
-﻿@model Library.Models.Book
+﻿@model Library.ViewModel.CreateBookViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -24,7 +24,16 @@
             </div>
             <div class="form-group">
                 <label asp-for="Ganre" class="control-label"></label>
-               <input asp-for="Ganre" class="form-control" />
+               <select asp-for="Ganre" class="form-control" >
+                   <option></option>
+                   <option>Fantasy</option>
+                   <option>Romance</option>
+                   <option>Historical</option>
+                   <option>Horor</option>
+                   <option>SiFi</option>
+                   <option>Science</option>
+               </select>
+
                 <span asp-validation-for="Ganre" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -32,6 +41,14 @@
                 <input asp-for="ReleaseDate" class="form-control" />
                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label"></label>
+                <input asp-for="Photo" class="form-control custom-file-input" />
+                
+            </div>
+
+            
+
             <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -20,8 +20,10 @@ namespace Library.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Releas Date")]
         public DateTime? ReleaseDate { get; set; }
-        
-        
+        public string? PhotoPath { get; set; }
+
+
+
 
 
 
