@@ -1,4 +1,4 @@
-﻿@model Library.ViewModel.CreateBookViewModel
+﻿@model Library.Models.Book
 
 @{
     ViewData["Title"] = "Create";
@@ -37,14 +37,19 @@
                 <span asp-validation-for="Ganre" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Snippet" class="control-label">Кратък откъс:</label>
+                <textarea asp-for="Snippet" class="" rows="4" cols="50" ></textarea>
+                <span asp-validation-for="Snippet" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="ReleaseDate" class="control-label"></label>
                 <input asp-for="ReleaseDate" class="form-control" />
                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Photo" class="control-label"></label>
-                <input asp-for="Photo" class="form-control custom-file-input" />
-                
+                <label asp-for="File" class="control-label" ></label>
+                <input asp-for="File" accept="upload/*"  />
+                <span asp-validation-for="File" class="text-danger"></span>
             </div>
 
             

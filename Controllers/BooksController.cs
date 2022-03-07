@@ -14,10 +14,12 @@ namespace Library.Controllers
     public class BooksController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public BooksController(ApplicationDbContext context)
+        public BooksController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            this._hostEnvironment = hostEnvironment;
         }
 
         // GET: Books
@@ -55,10 +57,19 @@ namespace Library.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookID,Title,Author,Ganre,ReleaseDate")] Book book)
+        public async Task<IActionResult> Create([Bind("BookID,Title,Author,Ganre,Snippet,ReleaseDate,File")] Book book)
         {
             if (ModelState.IsValid)
             {
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                string fileName = Path.GetFileNameWithoutExtension(book.File.FileName);
+                string extension = Path.GetExtension(book.File.FileName);
+                book.FilePath = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                string path = Path.Combine(wwwRootPath + "/upload/", fileName);
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    await book.File.CopyToAsync(fileStream);
+                }
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -87,7 +98,7 @@ namespace Library.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookID,Title,Author,Ganre,ReleaseDate")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("BookID,Title,Author,Ganre,Snippet,ReleaseDate,File")] Book book)
         {
             if (id != book.BookID)
             {
@@ -98,6 +109,15 @@ namespace Library.Controllers
             {
                 try
                 {
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    string fileName = Path.GetFileNameWithoutExtension(book.File.FileName);
+                    string extension = Path.GetExtension(book.File.FileName);
+                    book.FilePath = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                    string path = Path.Combine(wwwRootPath + "/upload/", fileName);
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await book.File.CopyToAsync(fileStream);
+                    }
                     _context.Update(book);
                     await _context.SaveChangesAsync();
                 }

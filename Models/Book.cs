@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
@@ -9,10 +10,11 @@ namespace Library.Models
 
 
         public int BookID { get; set; }
-
+       
         [StringLength(50, MinimumLength = 3)]
         public string? Title { get; set; }
         public string? Author { get; set; }
+        public string? Snippet { get; set; }
 
         public string? Ganre { get; set; }
 
@@ -20,7 +22,11 @@ namespace Library.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Releas Date")]
         public DateTime? ReleaseDate { get; set; }
-        public string? PhotoPath { get; set; }
+        [DisplayName("File Name")]
+        public string? FilePath { get; set; }
+        [NotMapped]
+        [DisplayName("Upload File")]
+        public IFormFile? File { get; set; }
 
 
 
