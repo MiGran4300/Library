@@ -8,24 +8,36 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Library.Data;
 using Library.Models;
+using Microsoft.AspNetCore.Identity;
+using Library.Areas.Identity.Data;
 
 namespace Library.Controllers
 {
     public class BooksController : Controller
+
     {
+        private RoleManager<IdentityRole> roleManager;
+        private UserManager<LibraryUser> userManager;
+        
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
+        
 
-        public BooksController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
+        public BooksController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<LibraryUser> userManager)
         {
             _context = context;
             this._hostEnvironment = hostEnvironment;
+            this.roleManager = roleManager;
+            this.userManager = userManager;
         }
 
         // GET: Books
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Books.ToListAsync());
+            var libraryContext = _context.Books.Include(c => c.Authors);
+            return View(await libraryContext.ToListAsync());
         }
 
         // GET: Books/Details/5
@@ -37,7 +49,9 @@ namespace Library.Controllers
             }
 
             var book = await _context.Books
+                  .Include(c => c.Authors)
                 .FirstOrDefaultAsync(m => m.BookID == id);
+          
             if (book == null)
             {
                 return NotFound();
@@ -49,6 +63,8 @@ namespace Library.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
+            ViewData["AuthorID"] = new SelectList(_context.Authors, "AuthorId", "FullName");
+
             return View();
         }
 
@@ -57,10 +73,13 @@ namespace Library.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookID,Title,Author,Ganre,Snippet,ReleaseDate,File")] Book book)
+        public async Task<IActionResult> Create([Bind("BookID,AuthorID,Title,Snippet,,Ganre, ReleaseDate,File")] Book book)
         {
             if (ModelState.IsValid)
             {
+                
+                
+
                 string wwwRootPath = _hostEnvironment.WebRootPath;
                 string fileName = Path.GetFileNameWithoutExtension(book.File.FileName);
                 string extension = Path.GetExtension(book.File.FileName);
@@ -70,10 +89,12 @@ namespace Library.Controllers
                 {
                     await book.File.CopyToAsync(fileStream);
                 }
+                
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AuthorID"] = new SelectList(_context.Authors, "AuthorId", "FullName", book.AuthorID);
             return View(book);
         }
 
@@ -90,6 +111,7 @@ namespace Library.Controllers
             {
                 return NotFound();
             }
+            ViewData["AuthorID"] = new SelectList(_context.Authors, "AuthorId", "FullName", book.AuthorID);
             return View(book);
         }
 
@@ -98,7 +120,7 @@ namespace Library.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookID,Title,Author,Ganre,Snippet,ReleaseDate,File")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("BookID,AuthorID, Title,Ganre,Snippet,ReleaseDate,File")] Book book)
         {
             if (id != book.BookID)
             {
@@ -134,6 +156,7 @@ namespace Library.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AuthorID"] = new SelectList(_context.Authors, "AuthorId", "FullName", book.AuthorID);
             return View(book);
         }
 
@@ -146,6 +169,7 @@ namespace Library.Controllers
             }
 
             var book = await _context.Books
+                .Include(c => c.Authors)
                 .FirstOrDefaultAsync(m => m.BookID == id);
             if (book == null)
             {
@@ -170,5 +194,52 @@ namespace Library.Controllers
         {
             return _context.Books.Any(e => e.BookID == id);
         }
+        
+
+        public async Task<IActionResult> Download(string filename)
+        {
+            if (filename == null)
+                return Content("filename is not availble");
+            string wwwRootPath = _hostEnvironment.WebRootPath;
+            string path = Path.Combine(wwwRootPath + "/upload/", filename);
+            
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, GetContentType(path), Path.GetFileName(path));
+        }
+
+        // Get content type
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        // Get mime types
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+    {
+        {".txt", "text/plain"},
+        {".pdf", "application/pdf"},
+        {".doc", "application/vnd.ms-word"},
+        {".docx", "application/vnd.ms-word"},
+        {".xls", "application/vnd.ms-excel"},
+        {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
+        {".png", "image/png"},
+        {".jpg", "image/jpeg"},
+        {".jpeg", "image/jpeg"},
+        {".gif", "image/gif"},
+        {".csv", "text/csv"}
+    };
+        }
+
     }
+    
 }

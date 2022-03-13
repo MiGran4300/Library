@@ -11,11 +11,11 @@ using Library.Models;
 
 namespace Library.Controllers
 {
-    public class CostumersController : Controller
+    public class AuthorsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CostumersController(ApplicationDbContext context)
+        public AuthorsController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -23,7 +23,7 @@ namespace Library.Controllers
         // GET: Costumers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Costumers.ToListAsync());
+            return View(await _context.Authors.ToListAsync());
         }
 
         // GET: Costumers/Details/5
@@ -34,8 +34,8 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var costumer = await _context.Costumers
-                .FirstOrDefaultAsync(m => m.CostumerID == id);
+            var costumer = await _context.Authors
+                .FirstOrDefaultAsync(m => m.AuthorId == id);
             if (costumer == null)
             {
                 return NotFound();
@@ -55,15 +55,15 @@ namespace Library.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CostumerID,FirstName,LastName,Email")] Costumer costumer)
+        public async Task<IActionResult> Create([Bind("AuthorId,FullName,Department, Grade, Email, Phone")] Author author)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(costumer);
+                _context.Add(author);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(costumer);
+            return View(author);
         }
 
         // GET: Costumers/Edit/5
@@ -74,12 +74,12 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var costumer = await _context.Costumers.FindAsync(id);
-            if (costumer == null)
+            var author = await _context.Authors.FindAsync(id);
+            if (author == null)
             {
                 return NotFound();
             }
-            return View(costumer);
+            return View(author);
         }
 
         // POST: Costumers/Edit/5
@@ -87,9 +87,9 @@ namespace Library.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CostumerID,FirstName,LastName,Email")] Costumer costumer)
+        public async Task<IActionResult> Edit(int id, [Bind("AuthorId,FullName,Department, Grade, Email, Phone")] Author author)
         {
-            if (id != costumer.CostumerID)
+            if (id != author.AuthorId)
             {
                 return NotFound();
             }
@@ -98,12 +98,12 @@ namespace Library.Controllers
             {
                 try
                 {
-                    _context.Update(costumer);
+                    _context.Update(author);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CostumerExists(costumer.CostumerID))
+                    if (!CostumerExists(author.AuthorId))
                     {
                         return NotFound();
                     }
@@ -114,7 +114,7 @@ namespace Library.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(costumer);
+            return View(author);
         }
 
         // GET: Costumers/Delete/5
@@ -125,14 +125,14 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var costumer = await _context.Costumers
-                .FirstOrDefaultAsync(m => m.CostumerID == id);
-            if (costumer == null)
+            var author = await _context.Authors
+                .FirstOrDefaultAsync(m => m.AuthorId == id);
+            if (author == null)
             {
                 return NotFound();
             }
 
-            return View(costumer);
+            return View(author);
         }
 
         // POST: Costumers/Delete/5
@@ -140,15 +140,15 @@ namespace Library.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var costumer = await _context.Costumers.FindAsync(id);
-            _context.Costumers.Remove(costumer);
+            var author = await _context.Authors.FindAsync(id);
+            _context.Authors.Remove(author);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CostumerExists(int id)
         {
-            return _context.Costumers.Any(e => e.CostumerID == id);
+            return _context.Authors.Any(e => e.AuthorId == id);
         }
     }
 }

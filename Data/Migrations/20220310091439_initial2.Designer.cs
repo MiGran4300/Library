@@ -4,6 +4,7 @@ using Library.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220310091439_initial2")]
+    partial class initial2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,16 +104,20 @@ namespace Library.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuthorId"), 1L, 1);
 
                     b.Property<string>("Department")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Grade")
+                    b.Property<int>("Grade")
                         .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Phone")
                         .HasColumnType("int");
@@ -119,56 +125,6 @@ namespace Library.Data.Migrations
                     b.HasKey("AuthorId");
 
                     b.ToTable("Authors");
-
-                    b.HasData(
-                        new
-                        {
-                            AuthorId = 1,
-                            Department = "Славянска филология",
-                            Email = "carson@lib.not",
-                            FullName = "Иван Иванов",
-                            Phone = 88776655
-                        },
-                        new
-                        {
-                            AuthorId = 2,
-                            Department = "Славянска филология",
-                            Email = "ptko@lib.not",
-                            FullName = "Петко Александров",
-                            Phone = 88445533
-                        },
-                        new
-                        {
-                            AuthorId = 3,
-                            Department = "Българска филология",
-                            Email = "maja@lib.not",
-                            FullName = "Мая Александрова",
-                            Phone = 788945533
-                        },
-                        new
-                        {
-                            AuthorId = 4,
-                            Department = "Английска филология",
-                            Email = "ivana@lib.not",
-                            FullName = "Ивана Илиева",
-                            Phone = 98495593
-                        },
-                        new
-                        {
-                            AuthorId = 5,
-                            Department = "Славянска филология",
-                            Email = "stojan@lib.not",
-                            FullName = "Стоян Михайлов",
-                            Phone = 778475533
-                        },
-                        new
-                        {
-                            AuthorId = 6,
-                            Department = "Китайска филология",
-                            Email = "dim@lib.not",
-                            FullName = "Димитър Петков",
-                            Phone = 99465543
-                        });
                 });
 
             modelBuilder.Entity("Library.Models.Book", b =>
@@ -179,7 +135,10 @@ namespace Library.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookID"), 1L, 1);
 
-                    b.Property<int?>("AuthorID")
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("AuthorId")
                         .HasColumnType("int");
 
                     b.Property<string>("FilePath")
@@ -187,6 +146,9 @@ namespace Library.Data.Migrations
 
                     b.Property<string>("Ganre")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LibraryUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("ReleaseDate")
                         .HasColumnType("datetime2");
@@ -200,71 +162,11 @@ namespace Library.Data.Migrations
 
                     b.HasKey("BookID");
 
-                    b.HasIndex("AuthorID");
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("LibraryUserId");
 
                     b.ToTable("Books");
-
-                    b.HasData(
-                        new
-                        {
-                            BookID = 1,
-                            AuthorID = 3,
-                            FilePath = "file1.docx",
-                            Ganre = "Есе",
-                            ReleaseDate = new DateTime(2022, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Snippet = "Няма човек, който обича болката сама по себе си, търси я и я желае, само защото е болка...",
-                            Title = "Две сестри"
-                        },
-                        new
-                        {
-                            BookID = 2,
-                            AuthorID = 2,
-                            FilePath = "file2.docx",
-                            Ganre = "Разказ",
-                            ReleaseDate = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Snippet = "Няма човек, който обича болката сама по себе си, търси я и я желае, само защото е болка...",
-                            Title = "Чужденецът"
-                        },
-                        new
-                        {
-                            BookID = 3,
-                            AuthorID = 1,
-                            FilePath = "file3.docx",
-                            Ganre = "Разказ",
-                            ReleaseDate = new DateTime(2022, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Snippet = "Няма човек, който обича болката сама по себе си, търси я и я желае, само защото е болка...",
-                            Title = "Суша"
-                        },
-                        new
-                        {
-                            BookID = 4,
-                            AuthorID = 4,
-                            FilePath = "file4.docx",
-                            Ganre = "Разказ",
-                            ReleaseDate = new DateTime(2022, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Snippet = "Няма човек, който обича болката сама по себе си, търси я и я желае, само защото е болка...",
-                            Title = "Безславни дни"
-                        },
-                        new
-                        {
-                            BookID = 5,
-                            AuthorID = 2,
-                            FilePath = "file5.docx",
-                            Ganre = "Новела",
-                            ReleaseDate = new DateTime(2022, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Snippet = "Няма човек, който обича болката сама по себе си, търси я и я желае, само защото е болка...",
-                            Title = "Призрачния кораб"
-                        },
-                        new
-                        {
-                            BookID = 6,
-                            AuthorID = 4,
-                            FilePath = "file6.docx",
-                            Ganre = "Стихотворение",
-                            ReleaseDate = new DateTime(2022, 3, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Snippet = "Няма човек, който обича болката сама по себе си, търси я и я желае, само защото е болка...",
-                            Title = "Мъртви цветя"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -406,11 +308,13 @@ namespace Library.Data.Migrations
 
             modelBuilder.Entity("Library.Models.Book", b =>
                 {
-                    b.HasOne("Library.Models.Author", "Authors")
+                    b.HasOne("Library.Models.Author", null)
                         .WithMany("Books")
-                        .HasForeignKey("AuthorID");
+                        .HasForeignKey("AuthorId");
 
-                    b.Navigation("Authors");
+                    b.HasOne("Library.Areas.Identity.Data.LibraryUser", null)
+                        .WithMany("Books")
+                        .HasForeignKey("LibraryUserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -462,6 +366,11 @@ namespace Library.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Library.Areas.Identity.Data.LibraryUser", b =>
+                {
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("Library.Models.Author", b =>

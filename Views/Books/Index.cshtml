@@ -16,8 +16,9 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Author)
+                @Html.DisplayNameFor(model => model.Authors.FullName)
             </th>
+            
             <th>
                 @Html.DisplayNameFor(model => model.Ganre)
             </th>
@@ -37,8 +38,9 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Author)
+                @Html.DisplayFor(modelItem => item.Authors.FullName)
             </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.Ganre)
             </td>
@@ -46,7 +48,9 @@
                 @Html.DisplayFor(modelItem => item.ReleaseDate)
             </td>
             <td>
+                <a asp-action="Download" asp-route-filename="@item.FilePath">
                 @Html.DisplayFor(modelItem => item.FilePath)
+                </a>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a> |
