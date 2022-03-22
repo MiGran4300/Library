@@ -34,14 +34,17 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var costumer = await _context.Authors
+            var author = await _context.Authors
+                   .Include(s => s.Books)
+                    .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.AuthorId == id);
-            if (costumer == null)
+         
+            if (author == null)
             {
                 return NotFound();
             }
 
-            return View(costumer);
+            return View(author);
         }
 
         // GET: Costumers/Create

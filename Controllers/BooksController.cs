@@ -36,7 +36,8 @@ namespace Library.Controllers
         // GET: Books
         public async Task<IActionResult> Index()
         {
-            var libraryContext = _context.Books.Include(c => c.Authors);
+            var libraryContext = _context.Books
+                .Include(c => c.Authors);
             return View(await libraryContext.ToListAsync());
         }
 
@@ -98,7 +99,7 @@ namespace Library.Controllers
             return View(book);
         }
 
-        // GET: Books/Edit/5ccc
+        // GET: Books/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
