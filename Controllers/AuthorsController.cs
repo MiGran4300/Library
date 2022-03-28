@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Library.Data;
 using Library.Models;
+using Library.ViewModel;
 
 namespace Library.Controllers
 {
@@ -21,9 +22,48 @@ namespace Library.Controllers
         }
 
         // GET: Costumers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder,
+                                                string currentFilter,
+                                                string searchString,
+                                                int? pageNumber)
         {
-            return View(await _context.Authors.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "fullname_desc" : "";
+            ViewData["DepartmentSortParm"] = sortOrder == "Department" ? "department_desc" : "Department";
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+            var author = from s in _context.Authors
+                           select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                author = author.Where(s => s.FullName.Contains(searchString));
+                                       
+            }
+            switch (sortOrder)
+            {
+                case "fullname_desc":
+                    author = author.OrderByDescending(s => s.FullName);
+                    break;
+                case "Department":
+                    author = author.OrderBy(s => s.Department);
+                    break;
+                case "department_desc":
+                    author = author.OrderByDescending(s => s.Department);
+                    break;
+                default:
+                    author = author.OrderBy(s => s.FullName);
+                    break;
+            }
+
+            int pageSize = 5;
+            return View(await PaginatedList<Author>.CreateAsync(author.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Costumers/Details/5

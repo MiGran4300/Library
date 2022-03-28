@@ -10,6 +10,7 @@ using Library.Data;
 using Library.Models;
 using Microsoft.AspNetCore.Identity;
 using Library.Areas.Identity.Data;
+using Library.ViewModel;
 
 namespace Library.Controllers
 {
@@ -34,12 +35,59 @@ namespace Library.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder,
+                                                string currentFilter,
+                                                string searchString,
+                                                int? pageNumber)
         {
-            var libraryContext = _context.Books
-                .Include(c => c.Authors);
-            return View(await libraryContext.ToListAsync());
+
+
+            ViewData["CurrentSort"] = sortOrder;
+
+            ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "Title desc" : "";
+            ViewData["ReleaseDateSortParm"] = sortOrder == "ReleaseDate" ? "ReleaseDate desc" : "ReleaseDate";
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+                
+            }
+            ViewData["CurrentFilter"] = searchString;
+            
+
+
+            var book = from s in _context.Books.Include(c => c.Authors)
+                       select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                book = book.Where(s => s.Authors.FullName.Contains(searchString));
+
+            }
+            
+            switch (sortOrder)
+            {
+                
+                case "Title":
+                    book = book.OrderByDescending(s => s.Title);
+                    break;
+                case "ReleaseDate desc":
+                    book = book.OrderByDescending(s => s.ReleaseDate);
+                    break;
+                case "ReleaseDate":
+                    book = book.OrderBy(s => s.ReleaseDate);
+                    break;
+                default:
+                    book = book.OrderBy(s => s.Title);
+                    break;
+            }
+
+            int pageSize = 5;
+            return View(await PaginatedList<Book>.CreateAsync(book.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
+
 
         // GET: Books/Details/5
         public async Task<IActionResult> Details(int? id)
