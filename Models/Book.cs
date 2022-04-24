@@ -23,13 +23,24 @@ namespace Library.Models
         [Display(Name = "Releas Date")]
         public DateTime? ReleaseDate { get; set; }
 
-        [DisplayName("File Name")]
+        [DisplayName("Качи файл")]
         public string? FilePath { get; set; }
         [NotMapped]
-        [DisplayName("Upload File")]
+        [DisplayName("Качи файл")]
         public IFormFile? File { get; set; }
+        public int Rating { get; set; }
 
         public Author? Authors { get; set; }
+        public ICollection<Rating>? Ratings { get; set;}
+        
+        public decimal OverallRating { get
+            {
+                if (Ratings.Count > 0)
+                { return (Ratings.Average(x => x.Rank)); }
+
+                return (0);
+            } }
+        
 
         
        

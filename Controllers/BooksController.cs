@@ -19,10 +19,10 @@ namespace Library.Controllers
     {
         private RoleManager<IdentityRole> roleManager;
         private UserManager<LibraryUser> userManager;
-        
+
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
-        
+
 
         public BooksController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment,
             RoleManager<IdentityRole> roleManager,
@@ -53,10 +53,10 @@ namespace Library.Controllers
             else
             {
                 searchString = currentFilter;
-                
+
             }
             ViewData["CurrentFilter"] = searchString;
-            
+
 
 
             var book = from s in _context.Books.Include(c => c.Authors)
@@ -66,10 +66,10 @@ namespace Library.Controllers
                 book = book.Where(s => s.Authors.FullName.Contains(searchString));
 
             }
-            
+
             switch (sortOrder)
             {
-                
+
                 case "Title":
                     book = book.OrderByDescending(s => s.Title);
                     break;
@@ -99,8 +99,9 @@ namespace Library.Controllers
 
             var book = await _context.Books
                   .Include(c => c.Authors)
+                    .Include(b =>b.Ratings)
                 .FirstOrDefaultAsync(m => m.BookID == id);
-          
+
             if (book == null)
             {
                 return NotFound();
@@ -126,8 +127,8 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                
-                
+
+
 
                 string wwwRootPath = _hostEnvironment.WebRootPath;
                 string fileName = Path.GetFileNameWithoutExtension(book.File.FileName);
@@ -138,7 +139,7 @@ namespace Library.Controllers
                 {
                     await book.File.CopyToAsync(fileStream);
                 }
-                
+
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -243,7 +244,7 @@ namespace Library.Controllers
         {
             return _context.Books.Any(e => e.BookID == id);
         }
-        
+
 
         public async Task<IActionResult> Download(string filename)
         {
@@ -251,7 +252,7 @@ namespace Library.Controllers
                 return Content("filename is not availble");
             string wwwRootPath = _hostEnvironment.WebRootPath;
             string path = Path.Combine(wwwRootPath + "/upload/", filename);
-            
+
 
             var memory = new MemoryStream();
             using (var stream = new FileStream(path, FileMode.Open))
@@ -290,5 +291,5 @@ namespace Library.Controllers
         }
 
     }
-    
+
 }

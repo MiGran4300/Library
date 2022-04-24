@@ -2,6 +2,7 @@ using Library.Areas.Identity.Data;
 using Library.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static Library.Data.SeedData;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,10 +34,10 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<DbInitializer>();
 var app = builder.Build();
-if (args.Length == 1 && args[0].ToLower() == "seeddata")
-    SeedData(app);
 
-static void SeedData(IHost app)
+SeedData(app);
+
+void SeedData(IHost app)
 {
     var scopeFactory = app.Services.GetService<IServiceScopeFactory>();
     using (var scope = scopeFactory.CreateScope())
@@ -45,6 +46,8 @@ static void SeedData(IHost app)
         service.Initialize();
     }
 }
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
