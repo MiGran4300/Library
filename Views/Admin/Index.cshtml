@@ -1,10 +1,5 @@
-﻿@model PaginatedList<Library.Models.Author>
-@using Library.Areas.Identity.Data
-@using Library.ViewModel
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<LibraryUser> signInManager;
-
-
+﻿@using Library.ViewModel
+@model PaginatedList<Library.Models.Book>
 @{
     ViewData["Title"] = "Index";
 }
@@ -12,71 +7,71 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create"> Create New </a>
+    <a asp-action="Create">Create New</a>
 </p>
-
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
         <p>
-            Търси по име на автор: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            Търси по Автор: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
             <input type="submit" value="Search" class="btn btn-default" /> |
+            
             <a asp-action="Index">Върни се към пълния списък</a>
         </p>
     </div>
 </form>
-
 <table class="table">
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"
-                asp-route-currentFilter="@ViewData["CurrentFilter"]" > Име </a>
-            </th>
-           
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["DepartmentSortParm"]"
-                asp-route-currentFilter="@ViewData["CurrentFilter"]"> Специалност</a>
+              <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]"
+                asp-route-currentFilter="@ViewData["CurrentFilter"]" > Заглавие</a>
             </th>
             <th>
-               Курс
+             Автор
+            </th>
+            
+            <th>
+                Жанр 
             </th>
             <th>
-                Имейл
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["ReleaseDateSortParm"]"
+                asp-route-currentFilter="@ViewData["CurrentFilter"]" > Дата на публикуване </a>
             </th>
             <th>
-               Телефон
+                Файл
             </th>
-            <th></th>
+            <th>Статус</th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.FullName)
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Authors.FullName)
             </td>
             
             <td>
-                @Html.DisplayFor(modelItem => item.Department)
+                @Html.DisplayFor(modelItem => item.Ganre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Grade)
+                @Html.DisplayFor(modelItem => item.ReleaseDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                <a asp-action="Download" asp-route-filename="@item.FilePath">
+                @Html.DisplayFor(modelItem => item.FilePath)
+                </a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Phone)
+                @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-{
-                <a asp-action="Edit" asp-route-id="@item.AuthorId">Edit</a> 
-                <a asp-action="Details" asp-route-id="@item.AuthorId">Details</a> 
-}
-                <a asp-action="Delete" asp-route-id="@item.AuthorId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a> |
+                
+                <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
             </td>
-            
         </tr>
 }
     </tbody>

@@ -34,7 +34,8 @@ namespace Library.Controllers
             rating.Rank = rank;
             rating.BookID = bookId;
             rating.UserId = userManager.GetUserId(User);
-            
+
+           
             _context.Ratings.Add(rating);
             _context.SaveChanges();
 

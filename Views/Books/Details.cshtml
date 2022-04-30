@@ -74,15 +74,16 @@
             }
              *@
 
+             
             @{
                 if (Model.Ratings.Count > 0)
                 {
-                    <p>Обшата оценка на "@Model.Title" е  @Model.OverallRating.ToString("0.00") от 5
+                    <p>Общата оценка на "@Model.Title" е  @Model.OverallRating.ToString("0.00") от 5
                     @for (int i = 1; i < 6; i++)
                     {
                         // @Html.ActionLink("<i class='fa@(Model.OverallRating<i?'-regular':'-solid') fa-star'></i>", "SetRating", "Rating", new {rank=@i,bookId=@Model?.BookID})
 
-                        <i class="fa@(Model.OverallRating<i?"-regular":"-solid") fa-star"></i>
+                        <i class="fa@(Model.OverallRating<i?"-regular":"-solid") fa-star fa-2x"></i>
                     }
                     </p>
                 }
@@ -92,7 +93,9 @@
 
                 }
             }
-             <h3>Дайте вашата оценка</h3>   
+           
+             <h3>Дайте вашата оценка</h3> 
+             
            <form asp-action="SetRating" asp-controller="Rating"  asp-route-bookid="@Model?.BookID"
            >
                 
@@ -103,11 +106,10 @@
                         <span class="checkmark"></span>
                        </label>
                     }
-                    <input type="submit" value="Гласувай" />
+                    <input class="btn-link bg-danger text-white" type="submit" value="Гласувай" />
                     </form>
-           
-           
-            
+
+                                  
         </dd>
     </dl>
 </div>

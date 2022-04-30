@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Library</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
+    
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Library.styles.css" asp-append-version="true" />
     <!-- font awesome -->
@@ -24,33 +24,34 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Library</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img style="" src="/images/logo-horizontal.jpg" />
+                </a>
+             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>             
+    <div class=" collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a style="font-size:1.5rem;" class="nav-link text-white me-3" asp-area="" asp-controller="Home" asp-action="Index">Начало</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a  style="font-size:1.5rem;" class="nav-link text-white me-3" asp-area="" asp-controller="Home" asp-action="Privacy">За нас</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
+                            <a style="font-size:1.5rem;" class="nav-link text-white me-3" asp-area="" asp-controller="Books" asp-action="Index">Творби</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Authors" asp-action="Index">Автори</a>
+                            <a style="font-size:1.5rem;" class="nav-link text-white me-4" asp-area="" asp-controller="Authors" asp-action="Index">Автори</a>
                         </li>
                         
                         
                        
 
     <li class="nav-item dropdown">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+        <button style="font-size:1.5rem;" type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">
             Manage
             </button>
         
@@ -59,6 +60,8 @@
                asp-action="ListUsers">Users</a></li>
              <li> <a class="dropdown-item" asp-controller="Administration"
                asp-action="ListRoles">Roles</a></li>
+               <li> <a class="dropdown-item" asp-controller="Admin"
+               asp-action="Index">Uploaded Books</a></li>
         
         </ul>
     </li>
@@ -69,15 +72,15 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div  class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer   class="border-top footer text-white bg-dark  box-shadow">
         <div class="container">
-            &copy; 2022 - Library - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - The Library - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

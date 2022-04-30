@@ -1,9 +1,4 @@
-﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Library.Data;
@@ -11,11 +6,11 @@ using Library.Models;
 using Microsoft.AspNetCore.Identity;
 using Library.Areas.Identity.Data;
 using Library.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Library.Controllers
-{
-    public class BooksController : Controller
-
+{[Authorize (Roles="Admin")]
+    public class Admin : Controller
     {
         private RoleManager<IdentityRole> roleManager;
         private UserManager<LibraryUser> userManager;
@@ -24,7 +19,7 @@ namespace Library.Controllers
         private readonly IWebHostEnvironment _hostEnvironment;
 
 
-        public BooksController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment,
+        public Admin(ApplicationDbContext context, IWebHostEnvironment hostEnvironment,
             RoleManager<IdentityRole> roleManager,
             UserManager<LibraryUser> userManager)
         {
@@ -60,7 +55,7 @@ namespace Library.Controllers
 
 
             var book = from s in _context.Books.Include(c => c.Authors)
-                       where s.Status == Book.ContactStatus.Approved
+                       where s.Status != Book.ContactStatus.Approved
                        select s;
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -81,72 +76,12 @@ namespace Library.Controllers
                     book = book.OrderBy(s => s.ReleaseDate);
                     break;
                 default:
-                    book = book.OrderBy(s => s.Title);
+                    book = book.OrderByDescending(s => s.ReleaseDate);
                     break;
             }
 
             int pageSize = 5;
             return View(await PaginatedList<Book>.CreateAsync(book.AsNoTracking(), pageNumber ?? 1, pageSize));
-        }
-
-
-        // GET: Books/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var book = await _context.Books
-                  .Include(c => c.Authors)
-                    .Include(b =>b.Ratings)
-                .FirstOrDefaultAsync(m => m.BookID == id);
-
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            return View(book);
-        }
-
-        // GET: Books/Create
-        public IActionResult Create()
-        {
-            ViewData["AuthorID"] = new SelectList(_context.Authors, "AuthorId", "FullName");
-
-            return View();
-        }
-
-        // POST: Books/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookID,AuthorID,Title,Snippet,,Ganre, ReleaseDate,File")] Book book)
-        {
-            if (ModelState.IsValid)
-            {
-
-
-
-                string wwwRootPath = _hostEnvironment.WebRootPath;
-                string fileName = Path.GetFileNameWithoutExtension(book.File.FileName);
-                string extension = Path.GetExtension(book.File.FileName);
-                book.FilePath = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                string path = Path.Combine(wwwRootPath + "/upload/", fileName);
-                using (var fileStream = new FileStream(path, FileMode.Create))
-                {
-                    await book.File.CopyToAsync(fileStream);
-                }
-
-                _context.Add(book);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["AuthorID"] = new SelectList(_context.Authors, "AuthorId", "FullName", book.AuthorID);
-            return View(book);
         }
 
         // GET: Books/Edit/5
@@ -166,12 +101,10 @@ namespace Library.Controllers
             return View(book);
         }
 
-        // POST: Books/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookID,AuthorID, Title,Ganre,Snippet,ReleaseDate,File")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("BookID,AuthorID, Title,Ganre,Snippet,ReleaseDate,Status,File")] Book book)
         {
             if (id != book.BookID)
             {
@@ -209,8 +142,8 @@ namespace Library.Controllers
             }
             else
             {
-                
-                
+            book.FilePath = "file.doc";
+            
                 _context.Update(book);
                 await _context.SaveChangesAsync();
                 ViewData["AuthorID"] = new SelectList(_context.Authors, "AuthorId", "FullName", book.AuthorID);
@@ -219,32 +152,12 @@ namespace Library.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Books/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var book = await _context.Books
-                .Include(c => c.Authors)
-                .FirstOrDefaultAsync(m => m.BookID == id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            return View(book);
-        }
-
         // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var context = await _context.Books.FindAsync(id);
-            
             var book = _context.Books.OrderBy(e => e.Title).Include(e => e.Ratings).First();
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
@@ -302,5 +215,4 @@ namespace Library.Controllers
         }
 
     }
-
 }

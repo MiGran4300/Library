@@ -32,7 +32,7 @@ namespace Library.Data.Migrations
                 {
                     table.PrimaryKey("PK_Ratings", x => x.RatingId);
                     table.ForeignKey(
-                        name: "FK_Ratings_Books_BookID1",
+                        name: "FK_Ratings_Books_BookID",
                         column: x => x.BookID,
                         principalTable: "Books",
                         principalColumn: "BookID");

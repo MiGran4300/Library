@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220404110824_ratings")]
-    partial class ratings
+    [Migration("20220424135246_Status")]
+    partial class Status
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -115,7 +115,13 @@ namespace Library.Data.Migrations
                     b.Property<int?>("Grade")
                         .HasColumnType("int");
 
+                    b.Property<string>("OwnerID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("Phone")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("AuthorId");
@@ -160,7 +166,32 @@ namespace Library.Data.Migrations
                     b.ToTable("Books");
                 });
 
-            
+            modelBuilder.Entity("Library.Models.Rating", b =>
+                {
+                    b.Property<int>("RatingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RatingId"), 1L, 1);
+
+                    b.Property<int?>("BookID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Rank")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RatingId");
+
+                    b.HasIndex("BookID");
+
+                    b.ToTable("Ratings");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -308,7 +339,14 @@ namespace Library.Data.Migrations
                     b.Navigation("Authors");
                 });
 
-            
+            modelBuilder.Entity("Library.Models.Rating", b =>
+                {
+                    b.HasOne("Library.Models.Book", "Book")
+                        .WithMany("Ratings")
+                        .HasForeignKey("BookID");
+
+                    b.Navigation("Book");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {

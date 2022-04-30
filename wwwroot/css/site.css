@@ -1,10 +1,10 @@
 html {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 @media (min-width: 768px) {
   html {
-    font-size: 16px;
+    font-size: 18px;
   }
 }
 
@@ -14,42 +14,17 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    /* background-image: url(/images/openbook.jpg) */
 }
-.starFade {
-    background-image:URL('/images/starFade.png');
-    min-width:30px;
-    min-height:30px;
-    cursor:pointer;
-}
-.starFadeN {
-    background-image: URL('/images/starFade.png');
-    min-width: 30px;
-    min-height: 30px;
-    display: inline-block;
-}
-.starGlow {
-    background-image: URL('/images/starGlow.png');
-    min-width: 30px;
-    min-height: 30px;
-    cursor: pointer;
-}
-
-.starGlowN {
-    background-image: URL('/images/starGlow.png');
-    min-width: 30px;
-    min-height: 30px;
-    display: inline-block;
-}
-
 /* Customize the label (the container) */
 label.container {
-    display:inline;
+    display: inline;
     position: relative;
     padding-left: 35px;
     margin-bottom: 12px;
     cursor: pointer;
-    font-size: ;
+    font-size:;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;

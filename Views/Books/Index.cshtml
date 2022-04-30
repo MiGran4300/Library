@@ -64,9 +64,10 @@
                 @Html.DisplayFor(modelItem => item.FilePath)
                 </a>
             </td>
+            
             <td>
-                <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookID">Details</a> |
+                <a asp-action="Edit" asp-route-id="@item.BookID" >Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BookID" >Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
             </td>
         </tr>

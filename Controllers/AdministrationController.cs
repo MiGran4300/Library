@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 namespace Library.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
+        
         private RoleManager<IdentityRole> roleManager;
         private UserManager<LibraryUser> userManager;
 

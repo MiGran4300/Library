@@ -6,6 +6,8 @@ namespace Library.Models
     public class Author
     {
         public int AuthorId { get; set; }
+        // user ID from AspNetUser table.
+        public string? OwnerID { get; set; }
         [DisplayName("Автор")]
         public string? FullName { get; set; }
         
@@ -21,6 +23,9 @@ namespace Library.Models
         public string? Email { get; set; }
         [DataType(DataType.PhoneNumber)]
         public int? Phone { get; set; }
+        
         public ICollection<Book>? Books { get; set; }
+
+       
     }
 }

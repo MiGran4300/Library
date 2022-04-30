@@ -113,6 +113,9 @@ namespace Library.Data.Migrations
                     b.Property<int?>("Grade")
                         .HasColumnType("int");
 
+                    b.Property<string>("OwnerID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("Phone")
                         .HasColumnType("int");
 
@@ -147,6 +150,9 @@ namespace Library.Data.Migrations
                     b.Property<string>("Snippet")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -166,10 +172,7 @@ namespace Library.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RatingId"), 1L, 1);
 
-                    b.Property<string>("BookID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BookID1")
+                    b.Property<int?>("BookID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreateDate")
@@ -183,7 +186,7 @@ namespace Library.Data.Migrations
 
                     b.HasKey("RatingId");
 
-                    b.HasIndex("BookID1");
+                    b.HasIndex("BookID");
 
                     b.ToTable("Ratings");
                 });
@@ -336,9 +339,11 @@ namespace Library.Data.Migrations
 
             modelBuilder.Entity("Library.Models.Rating", b =>
                 {
-                    b.HasOne("Library.Models.Book", null)
+                    b.HasOne("Library.Models.Book", "Book")
                         .WithMany("Ratings")
-                        .HasForeignKey("BookID1");
+                        .HasForeignKey("BookID");
+
+                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

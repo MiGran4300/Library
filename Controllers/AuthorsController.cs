@@ -9,19 +9,28 @@ using Microsoft.EntityFrameworkCore;
 using Library.Data;
 using Library.Models;
 using Library.ViewModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Library.Areas.Identity.Data;
 
 namespace Library.Controllers
 {
     public class AuthorsController : Controller
     {
+        private RoleManager<IdentityRole> roleManager;
+        private UserManager<LibraryUser> userManager;
+
         private readonly ApplicationDbContext _context;
 
-        public AuthorsController(ApplicationDbContext context)
+        public AuthorsController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager,
+            UserManager<LibraryUser> userManager)
         {
             _context = context;
+            this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
-        // GET: Costumers
+        // GET: 
         public async Task<IActionResult> Index(string sortOrder,
                                                 string currentFilter,
                                                 string searchString,
@@ -39,7 +48,7 @@ namespace Library.Controllers
                 searchString = currentFilter;
             }
             ViewData["CurrentFilter"] = searchString;
-            var author = from s in _context.Authors
+            var author = from s in _context.Authors 
                            select s;
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -86,13 +95,13 @@ namespace Library.Controllers
 
             return View(author);
         }
-
+        
         // GET: Costumers/Create
         public IActionResult Create()
         {
             return View();
         }
-
+        
         // POST: Costumers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -108,7 +117,7 @@ namespace Library.Controllers
             }
             return View(author);
         }
-
+        [Authorize]
         // GET: Costumers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -124,7 +133,7 @@ namespace Library.Controllers
             }
             return View(author);
         }
-
+        
         // POST: Costumers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -159,7 +168,7 @@ namespace Library.Controllers
             }
             return View(author);
         }
-
+        [Authorize]
         // GET: Costumers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -177,13 +186,14 @@ namespace Library.Controllers
 
             return View(author);
         }
-
+        
         // POST: Costumers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var author = await _context.Authors.FindAsync(id);
+            var context = await _context.Authors.FindAsync(id);
+            var author = _context.Authors.OrderBy(e => e.FullName).Include(e => e.Books).First();
             _context.Authors.Remove(author);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
 namespace Library.Areas.Identity.Pages.Account
-{
+{[AllowAnonymous]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<LibraryUser> _signInManager;

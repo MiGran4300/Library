@@ -6,9 +6,9 @@ namespace Library.Models
     {
         public int RatingId { get; set; }
         public string? UserId { get; set; }
-        [Range(0,5)]
+        [Range(0, 5)]
         [Display(Name = "Rank")]
-        public decimal Rank { get;  set; }
+        public decimal Rank { get; set; }
         public int? BookID { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;
 

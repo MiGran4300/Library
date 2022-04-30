@@ -29,20 +29,30 @@ namespace Library.Models
         [DisplayName("Качи файл")]
         public IFormFile? File { get; set; }
         public int Rating { get; set; }
+        [DisplayName("Статус")]
+        public ContactStatus Status { get; set; }
 
         public Author? Authors { get; set; }
         public ICollection<Rating>? Ratings { get; set;}
         
+        public enum ContactStatus
+        {
+            Submitted,
+            Approved,
+            Rejected
+        }
+
         public decimal OverallRating { get
             {
-                if (Ratings.Count > 0)
+               
+               
+                if (Ratings!=null&&Ratings.Count > 0)
                 { return (Ratings.Average(x => x.Rank)); }
 
                 return (0);
             } }
         
-
-        
+     
        
 }
     }

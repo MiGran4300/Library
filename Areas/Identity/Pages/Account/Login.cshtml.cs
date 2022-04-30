@@ -18,6 +18,7 @@ using Library.Areas.Identity.Data;
 
 namespace Library.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class LoginModel : PageModel
     {
         private readonly SignInManager<LibraryUser> _signInManager;

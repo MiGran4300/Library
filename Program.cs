@@ -1,5 +1,6 @@
 using Library.Areas.Identity.Data;
 using Library.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using static Library.Data.SeedData;
@@ -31,6 +32,14 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.SignIn.RequireConfirmedPhoneNumber = false;
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    
+});
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<DbInitializer>();
 var app = builder.Build();
@@ -46,6 +55,7 @@ void SeedData(IHost app)
         service.Initialize();
     }
 }
+
 
 
 
