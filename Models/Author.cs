@@ -18,11 +18,14 @@ namespace Library.Models
         [DisplayName("Курс")]
         public int? Grade { get; set; }
 
+       
         [DataType(DataType.EmailAddress)]
         [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", ErrorMessage = "Email is not valid.")]
         public string? Email { get; set; }
         [DataType(DataType.PhoneNumber)]
-        public int? Phone { get; set; }
+        
+        [DisplayName("Телефон")]
+        public string? Phone { get; set; }
         
         public ICollection<Book>? Books { get; set; }
 

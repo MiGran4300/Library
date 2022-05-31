@@ -12,16 +12,17 @@ namespace Library.Models
         public int? AuthorID { get; set; }
         
         [StringLength(50, MinimumLength = 3)]
+        [DisplayName("Заглавие")]
         public string? Title { get; set; }
-        
+        [DisplayName("Откъс")]
         public string? Snippet { get; set; }
-
+        [DisplayName("Жанр")]
         public string? Ganre { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Releas Date")]
-        public DateTime? ReleaseDate { get; set; }
+        [Display(Name = "Дата на публикуване")]
+        public DateTime? ReleaseDate { get; set; } = DateTime.Now;
 
         [DisplayName("Качи файл")]
         public string? FilePath { get; set; }

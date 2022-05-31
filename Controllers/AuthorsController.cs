@@ -107,7 +107,7 @@ namespace Library.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AuthorId,FullName,Department, Grade, Email, Phone")] Author author)
+        public async Task<IActionResult> Create([Bind("AuthorId,FullName,Department, Grade, Email, Phone, OwnerID")] Author author)
         {
             if (ModelState.IsValid)
             {
@@ -117,7 +117,7 @@ namespace Library.Controllers
             }
             return View(author);
         }
-        [Authorize]
+        
         // GET: Costumers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

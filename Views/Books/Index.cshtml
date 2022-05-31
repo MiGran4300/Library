@@ -1,14 +1,25 @@
-﻿@using Library.ViewModel
+﻿@using Library.Areas.Identity.Data
+@using Library.ViewModel
+@using Microsoft.AspNetCore.Identity
 @model PaginatedList<Library.Models.Book>
+@inject SignInManager<LibraryUser> signInManager;
+@inject UserManager<LibraryUser> UserManager;
+
+
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Произведения</h1>
-
+@foreach (var item in Model) {
+@if (item.Authors.OwnerID==UserManager.GetUserId(User) || User.IsInRole("Admin"))
+                 
+                        {
 <p>
     <a asp-action="Create">Качи произведение</a>
 </p>
+                        }
+}
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
         <p>
@@ -66,9 +77,14 @@
             </td>
             
             <td>
-                <a asp-action="Edit" asp-route-id="@item.BookID" >Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookID" >Details</a> |
+                @if (item.Authors.OwnerID==UserManager.GetUserId(User) || User.IsInRole("Admin"))
+                 
+                        {
+                <a asp-action="Edit" asp-route-id="@item.BookID" >Edit</a> 
                 <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
+                        }
+                <a asp-action="Details" asp-route-id="@item.BookID" >Details</a> |
+                
             </td>
         </tr>
 }

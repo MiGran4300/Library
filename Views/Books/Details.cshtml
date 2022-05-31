@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Произведение</h1>
+<h2>@Html.DisplayFor(model => model.Title)</h2>
  <hr />
 
 <div class="jumbotron" style="background-image:url(/images/glasses.png);
@@ -12,12 +12,7 @@ background-repeat:no-repeat;background-position: right bottom; margin:auto">
   
    
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-           <h3> @Html.DisplayFor(model => model.Title)</h3>
-        </dd>
+       
        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Authors.FullName)
         </dt>
@@ -34,7 +29,7 @@ background-repeat:no-repeat;background-position: right bottom; margin:auto">
             @Html.DisplayNameFor(model => model.Snippet)
         </dt>
         <dd class = "col-sm-10">
-            <div contenteditable="true"><q>@Html.DisplayFor(model => model.Snippet)</q></div>
+            <div class="snippet"> @Html.Raw(Model.Snippet)</div>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ReleaseDate)
@@ -46,7 +41,9 @@ background-repeat:no-repeat;background-position: right bottom; margin:auto">
             @Html.DisplayNameFor(model => model.FilePath)
         </dt>
         <dd class = "col-sm-10">
+            <a asp-action="Download" asp-route-filename="@Model.FilePath">
             @Html.DisplayFor(model => model.FilePath)
+            </a>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Rating)

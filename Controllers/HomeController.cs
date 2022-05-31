@@ -1,5 +1,7 @@
-﻿using Library.Models;
+﻿using Library.Areas.Identity.Data;
+using Library.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,11 +9,16 @@ namespace Library.Controllers
 {
     public class HomeController : Controller
     {
-        
+        private RoleManager<IdentityRole> roleManager;
+        private UserManager<LibraryUser> userManager;
+
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, RoleManager<IdentityRole> roleManager,
+           UserManager<LibraryUser> userManager)
         {
+            this.roleManager = roleManager;
+            this.userManager = userManager;
             _logger = logger;
         }
         [AllowAnonymous]

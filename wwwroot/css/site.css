@@ -1,7 +1,6 @@
 html {
     font-size: 16px;
-    height: 100%;
-    margin: 0;
+    
 }
 
 @media (min-width: 768px) {
@@ -17,7 +16,7 @@ html {
 
 body {
     margin-bottom: 60px;
-    /* background-image: url(/images/openbook.jpg) */
+    
 }
 /* Customize the label (the container) */
 label.container {
@@ -41,7 +40,13 @@ label.container {
         height: 0;
         width: 0;
     }
-
+.snippet {
+    padding: 15px;
+    width: 50%;
+    height: 100px;
+    overflow: scroll;
+    border: 1px solid #ccc;
+}
 /* Create a custom radio button */
 span.checkmark {
     position: absolute;

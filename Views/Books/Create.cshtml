@@ -5,12 +5,10 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h4>Сподели творба</h4>
 
-<h4>Book</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-10">
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Ratings" value="0">
@@ -27,12 +25,12 @@
                 <label asp-for="Ganre" class="control-label"></label>
                <select asp-for="Ganre" class="form-control" >
                    <option></option>
-                   <option>Fantasy</option>
-                   <option>Romance</option>
-                   <option>Historical</option>
-                   <option>Horor</option>
-                   <option>SiFi</option>
-                   <option>Science</option>
+                   <option>Фантастика</option>
+                   <option>Фентъзи</option>
+                   <option>Исторически</option>
+                   <option>Трилър</option>
+                   <option>Поезия</option>
+                   <option>Детска литература</option>
                </select>
 
                 <span asp-validation-for="Ganre" class="text-danger"></span>
@@ -42,20 +40,12 @@
                 <textarea asp-for="Snippet"  class="" ></textarea>
                 <span asp-validation-for="Snippet" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ReleaseDate" class="control-label"></label>
-                <input asp-for="ReleaseDate" class="form-control" />
-                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
-            </div>
-            
-                           
+                          
             <div class="form-group">
                 <label asp-for="File" class="control-label" ></label>
                 <input asp-for="File" accept="upload/*"  />
                 <span asp-validation-for="File" class="text-danger"></span>
             </div>
-
-            
 
             <br />
             <div class="form-group">

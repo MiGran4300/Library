@@ -101,29 +101,20 @@ namespace Library.Controllers
             return View(book);
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookID,AuthorID, Title,Ganre,Snippet,ReleaseDate,Status,File")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("BookID,AuthorID, Title,Ganre,Snippet,ReleaseDate, FilePath, Status")] Book book)
         {
             if (id != book.BookID)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid && book.File != null)
+            if (ModelState.IsValid )
             {
                 try
                 {
-                    string wwwRootPath = _hostEnvironment.WebRootPath;
-                    string fileName = Path.GetFileNameWithoutExtension(book.File.FileName);
-                    string extension = Path.GetExtension(book.File.FileName);
-                    book.FilePath = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                    string path = Path.Combine(wwwRootPath + "/upload/", fileName);
-                    using (var fileStream = new FileStream(path, FileMode.Create))
-                    {
-                        await book.File.CopyToAsync(fileStream);
-                    }
                     _context.Update(book);
                     await _context.SaveChangesAsync();
                 }
@@ -142,16 +133,33 @@ namespace Library.Controllers
             }
             else
             {
-            book.FilePath = "file.doc";
-            
+
+
                 _context.Update(book);
                 await _context.SaveChangesAsync();
                 ViewData["AuthorID"] = new SelectList(_context.Authors, "AuthorId", "FullName", book.AuthorID);
-                
+
             }
             return RedirectToAction(nameof(Index));
         }
+        // GET: Admin/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var book = await _context.Books
+                .Include(c => c.Authors)
+                .FirstOrDefaultAsync(m => m.BookID == id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            return View(book);
+        }
         // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
